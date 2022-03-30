@@ -19,7 +19,7 @@ function arrayFrom() {
   // []
   console.log(Array.from(10));
   // []
-  console.log(Array.from(true));
+  console.log(Array.from(true));  
   // []
   // console.log(Array.from(undefined))
   // TypeError
