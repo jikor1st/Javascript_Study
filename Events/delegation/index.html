@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    section {
+      padding: 25px;
+    }
+
+    .study-tit {
+      font-size: 20px;
+      font-weight: bold;
+    }
+  </style>
+  <div id="root">
+    <div>
+      <p>자바스크립트 이벤트 공부 ( javascript event )</p>
+
+      <!-- 이벤트 전파 -->
+      <!--  -->
+      <div>
+        <section>
+          <a>link</a>
+        </section>
+      </div>
+
+      <!-- 이벤트 버블링 -->
+      <style>
+        #event-bubbling-wrap {
+          padding: 50px;
+          margin: 20px;
+          border: 1px solid #000000;
+        }
+
+        #event-bubbling-container {
+          padding: 50px;
+          margin: 20px;
+          border: 1px solid #000000;
+        }
+
+        #event-bubbling-content {
+          padding: 50px;
+          margin: 20px;
+          border: 1px solid #000000;
+        }
+      </style>
+      <section>
+        <h1 class="study-tit">이벤트 버블링 공부</h1>
+        <div id="event-bubbling-wrap">
+          wrap
+          <div id="event-bubbling-container">
+            container
+            <p id="event-bubbling-content">이벤트 버블링 테스트</p>
+          </div>
+        </div>
+      </section>
+      <script type="text/javascript">
+
+        const eventBubblingWrapEl = document.getElementById('event-bubbling-wrap');
+        const eventBubblingConainerEl = document.getElementById('event-bubbling-container');
+        const eventBubblingContentEl = document.getElementById('event-bubbling-content');
+
+        eventBubblingWrapEl.addEventListener('click', function () {
+          alert(`${this.id}`)
+        })
+        eventBubblingConainerEl.addEventListener('click', function () {
+          alert(`${this.id}`)
+        })
+        eventBubblingContentEl.addEventListener('click', function () {
+          alert(`${this.id}`)
+        })
+
+      </script>
+
+    </div>
+
+  </div>
+</body>
+
+</html>
