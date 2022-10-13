@@ -7,12 +7,26 @@
 </head>
 
 <body>
+  <style>
+    .container {
+      margin: 20px;
+    }
+
+    hr {
+      width: 100%;
+      height: 1px;
+      border: 0;
+      background: #cccccc
+    }
+  </style>
   <!-- bubbling -->
   <div class="container bubbling">
     <div class="wrapper bubbling">
       <button class="button bubbling">bubbling button</button>
     </div>
   </div>
+
+  <hr />
 
   <!-- capture -->
   <div class="container capture">
@@ -21,11 +35,22 @@
     </div>
   </div>
 
+  <hr />
+
   <!-- stopPropagation -->
-  <div class="container stopPropagation">
-    <div class="wrapper stopPropagation">
-      <button class="button stopPropagation">stopPropagation button</button>
+  <div class="container stop-propagation">
+    <div class="wrapper stop-propagation">
+      <button class="button stop-propagation">stopPropagation button</button>
     </div>
+  </div>
+
+  <hr />
+
+  <!-- event delegation -->
+  <div class="container delegation">
+    <ul class="wrapper delegation">
+    </ul>
+    <button class="add-btn">add list</button>
   </div>
 
   <script type="text/javascript">
@@ -46,13 +71,43 @@
     })
 
     // stopPropagation
-    const stopPropagationEl = document.querySelectorAll('.stopPropagation');
-    stopPropagationEl.forEach((element) => {
-      element.addEventListener("click", (e) => {
-        e.stopPropagation();
-        console.log(e.currentTarget.className)
+    const stopPropagationEl = document.querySelectorAll('.stop-propagation');
+    // stopPropagationEl.forEach((element) => {
+    //   element.addEventListener("click", (e) => {
+    //     e.stopPropagation();
+    //     console.log(e.currentTarget.className)
+    //   })
+    // })
+
+    // delegation
+    (function () {
+      let liNum = 0;
+      const addBtnEl = document.querySelector('.delegation .add-btn');
+      const delegationItemWrapper = document.querySelector('.delegation ul.wrapper')
+
+      const templateDelegationItem = (liNum = 0) => {
+        const liEl = document.createElement('li');
+        const inputEl = document.createElement('input');
+        inputEl.classList.add(`input-${liNum}`)
+        const labelEl = document.createElement('label');
+        inputEl.type = 'checkbox';
+        labelEl.innerText = ' 리스트'
+
+        liEl.append(inputEl)
+        liEl.append(labelEl)
+
+        return liEl;
+      }
+      addBtnEl.addEventListener("click", () => {
+        delegationItemWrapper.append(templateDelegationItem(liNum))
+        liNum++;
       })
-    })
+
+      delegationItemWrapper.addEventListener('change', (e) => {
+        const targetClass = e.target.className;
+        console.log('targetClass: ', targetClass);
+      })
+    }());
   </script>
 </body>
 
