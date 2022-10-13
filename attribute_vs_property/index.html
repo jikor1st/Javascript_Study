@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>attribute_vs_propperty</title>
+</head>
+
+<body>
+  <div>
+    <input type="text" value="Test" />
+    <button>console.log</button>
+  </div>
+  <script type="text/javascript">
+    const inputEl = document.querySelector('input');
+    const buttonEl = document.querySelector('button');
+
+    buttonEl.addEventListener('click', () => {
+      console.log(inputEl.value);
+      console.log(inputEl.getAttribute('value'));
+      console.log(inputEl.defaultValue);
+    })
+  </script>
+</body>
+
+</html>

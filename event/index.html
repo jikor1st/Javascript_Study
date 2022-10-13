@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>attribute_vs_propperty</title>
+</head>
+
+<body>
+  <!-- bubbling -->
+  <div class="container bubbling">
+    <div class="wrapper bubbling">
+      <button class="button bubbling">bubbling button</button>
+    </div>
+  </div>
+
+  <!-- capture -->
+  <div class="container capture">
+    <div class="wrapper capture">
+      <button class="button capture">capture button</button>
+    </div>
+  </div>
+
+  <!-- stopPropagation -->
+  <div class="container stopPropagation">
+    <div class="wrapper stopPropagation">
+      <button class="button stopPropagation">stopPropagation button</button>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    // bubbling
+    const bubblingEl = document.querySelectorAll('.bubbling');
+    bubblingEl.forEach((element) => {
+      element.addEventListener("click", (e) => {
+        console.log(e.currentTarget.className)
+      })
+    })
+
+    // capture
+    const captureEl = document.querySelectorAll('.capture');
+    captureEl.forEach((element) => {
+      element.addEventListener("click", (e) => {
+        console.log(e.currentTarget.className)
+      }, { capture: true })
+    })
+
+    // stopPropagation
+    const stopPropagationEl = document.querySelectorAll('.stopPropagation');
+    stopPropagationEl.forEach((element) => {
+      element.addEventListener("click", (e) => {
+        e.stopPropagation();
+        console.log(e.currentTarget.className)
+      })
+    })
+  </script>
+</body>
+
+</html>
