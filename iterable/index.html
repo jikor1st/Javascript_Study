@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>이터러블 | iterable</title>
+</head>
+
+<body>
+  <script type="text/javascript">
+    /** 1. 개념 */
+
+    (function () {
+      /** 이터러블(iterable) */
+      // 이터러블이란 자료를 반복할 수 있는 객체를 말합니다.
+
+      // 이터러블 표식 삭제
+      let arr = [1, 2, 3];
+      for (const a of arr) console.log("iterable:", a);
+
+      try {
+        arr[Symbol.iterator] = null;
+        for (const a of arr) console.log("iterable:", a);
+
+      } catch (error) {
+        console.error(error)
+      }
+
+    })();
+
+
+    (function () {
+      /** 이터레이터(iterator) */
+      // {value:값, done: true/false} 형태의 이터레이터 객체를 리턴하는 next() 메서드를 가진 객체. next 메서드로 순환 할 수 있는 객체
+
+      const arr = [1, 2, 3];
+      const iter = arr[Symbol.iterator]();
+
+      for (let i = 0; i <= arr.length; i++) {
+        console.log(iter.next())
+      }
+    })();
+
+    /** [Symbol.iterator] 간단 구현 */
+    (function () {
+      // 이터러블 객체
+      // 1. 객체 생성
+      let range = {
+        from: 1,
+        to: 5
+      }
+
+      range[Symbol.iterator] = function () {
+
+        // 이터레이터 객체 (리턴해서 생성)
+        return {
+          current: this.from,
+          last: this.to,
+
+          next() {
+            if (this.current <= this.last) {
+              return { done: false, value: this.current++ };
+            } else {
+              return { done: true }
+            }
+          }
+        }
+      }
+
+      // 객체 순회 테스트
+      for (let num of range) {
+        console.log("[Symbol.iterator]:", num);
+      }
+    })();
+
+    (function () {
+      // 하나의 객체에서 이터레이터 형식 정의
+      let range = {
+        from: 1,
+        to: 5,
+
+        [Symbol.iterator]() {
+          this.current = this.from;
+          this.last = this.to;
+          return this;
+        },
+
+        next() {
+          if (this.current <= this.last) {
+            return { done: false, value: this.current++ };
+          } else {
+            return { done: true }
+          }
+        }
+      }
+
+      for (let num of range) {
+        console.log("[Symbol.iterator2]:", num);
+      }
+    })();
+
+    /** 유사배열 vs 이터러블 */
+    // 이터러블(iterable): 메서드 Symbol.iterator가 구현된 객체
+    // 유사배열(array-like): 인덱스와 length 프로퍼티가 있어서 배열처럼 보이는 객체
+
+    /**
+     * Map 자료형이나 DOM에서 반환하는 배열, arguments 배열은 모두 이터러블 작업이 마쳐진 유사배열입니다. 원래 생 유사배열은 순회가 불가능합니다.
+    */
+
+    (function () {
+
+      // index와 length프로퍼티가 있는것을 유사 배열이라고 칭합니다.
+      let arrayLike = {
+        0: "Hello",
+        1: "World",
+        length: 2,
+      }
+
+      try {
+        // Symbol.iterator 가 없으므로 에러 발생 
+        // 또한 push, pop 등의 메서드를 지원하지 않습니다.
+        for (let item of arrayLike) {
+
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    })();
+
+    (function () {
+      // Array.from을 사용해서 유사배열 Array로 만들어주기
+      let arrayLike = {
+        0: "Hello",
+        1: "World",
+        length: 2,
+      }
+
+      let arr = Array.from(arrayLike);
+      for (let item of arr) {
+        console.log("like to arr:", item)
+      }
+    })();
+
+    (function () {
+      let iterableText = 'test';
+
+      for (let char of iterableText) {
+        console.log('char:', char);
+      }
+    })();
+
+    // Map과 Set 자료형도 이터러블이지만 Map과 Set에서 공부할예정
+  </script>
+</body>
+
+</html>
