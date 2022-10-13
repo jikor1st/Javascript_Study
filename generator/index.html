@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>제너레이터 | generator</title>
+</head>
+
+<body>
+  <script type="text/javascript">
+    // 제너레이터란?
+    // es6에 도입된 제너레이터 함수는 이터러블을 생성하는 함수입니다.
+    // 이터레이션 프로토콜을 준수해 이터러블을 생성하는 방식보다 간편하게 이터러블을 구현할 수 있습니다.
+    // 비동기 처리에 유용하게 사용됩니다.
+
+    (function () {
+      function* counter() {
+        console.log('첫번째 호출');
+        yield 1;
+        console.log("두번째 호출");
+        yield 2;
+        console.log('세번째 호출');
+      }
+
+      const generatorObj = counter();
+
+      console.log(generatorObj.next());
+      console.log(generatorObj.next());
+      console.log(generatorObj.next());
+      console.log(generatorObj.next());
+
+    })();
+
+    console.log("-----------------");
+
+    (function () {
+      function* counter() {
+        for (const v of [1, 2, 3]) yield v;
+      }
+      let generatorObj = counter();
+
+      // 제너레이터는 이터러블입니다.
+      console.log(Symbol.iterator in generatorObj);
+
+      for (const i of generatorObj) {
+        console.log(i);
+      }
+
+      generatorObj = counter();
+
+      // 제너레이터는 이터레이터입니다.
+      console.log('next' in generatorObj);
+
+      console.log(generatorObj.next());
+      console.log(generatorObj.next());
+      console.log(generatorObj.next());
+      console.log(generatorObj.next());
+    })();
+
+    console.log("-----------------");
+
+    // 1. 제너레이터의 활용
+
+
+    (function () {
+      // 이터러블의 구현
+      // 이터레이션 프로토콜을 준수하여 무한 피보나치 수열을 생성하는 함수 구현
+
+      const infiniteFibonacci = (function () {
+        let [pre, cur] = [0, 1];
+
+        return {
+          [Symbol.iterator]() { return this; },
+          next() {
+            [pre, cur] = [cur, pre + cur];
+            // done 프로퍼티 생략
+            return { value: cur };
+          }
+        }
+      })();
+
+      // infiniteFibonacci 는 무한 이터러블
+      for (const num of infiniteFibonacci) {
+        if (num > 1000) break;
+        console.log(num);
+      }
+
+    })();
+
+    console.log("-----------------");
+
+    (function () {
+      // 제너레이터로 무한 피보나치 수열 생성하는 함수 구현
+      const infiniteFibonacci = (function* () {
+        let [pre, cur] = [0, 1];
+
+        while (true) {
+          [pre, cur] = [cur, pre + cur];
+          yield cur;
+        }
+      })();
+
+      // infiniteFibonacci 는 무한 이터러블
+      for (const num of infiniteFibonacci) {
+        if (num > 1000) break;
+        console.log(num);
+      }
+
+      console.log("-----------------");
+
+      // 제너레이터로 최댓값 인수를 주어쥔 무한 피보나치 수열 생성 함수
+      const createInfiniteFibByGen = function* (max) {
+        let [prev, curr] = [0, 1];
+
+        while (true) {
+          [prev, curr] = [curr, prev + curr];
+          if (curr >= max) return; // 제너레이터 함수 종료
+          yield curr;
+        };
+      }
+
+      for (const num of createInfiniteFibByGen(100)) {
+        console.log("인수:", num);
+      }
+
+    })();
+
+    (function () {
+      // 제너레이터 인수 처리
+      function* gen(n) {
+        let res;
+        res = yield n;
+
+        console.log(res);
+        res = yield res;
+
+        console.log(res);
+        res = yield res;
+
+        console.log(res);
+        return res;
+      }
+
+      const generatorObj = gen(0);
+
+      console.log(generatorObj.next());
+      console.log(generatorObj.next(1));
+      console.log(generatorObj.next(2));
+      console.log(generatorObj.next(3));
+
+      console.log(generatorObj.next(4)); // undefined
+    })();
+
+    (function () {
+      // 제너레이터 비동기 처리
+      // es7에서 async/await이 등장한 이후 잘 사용되지는 않습니다.
+      function getUser(genObj, username) {
+        fetch(`https://api.github.com/users/${username}`)
+          .then(res => res.json())
+          // 제너레이터 객체에 비동기 처리 결과를 전달
+          .then(user => genObj.next(user.name));
+      }
+
+      const g = (function* () {
+        let user;
+        // ② 비동기 처리 함수가 결과를 반환한다.
+        // 비동기 처리의 순서가 보장된다.
+        user = yield getUser(g, 'jeresig');
+        console.log(user); // John Resig
+
+        user = yield getUser(g, 'ahejlsberg');
+        console.log(user); // Anders Hejlsberg
+
+        user = yield getUser(g, 'ungmo2');
+        console.log(user); // Ungmo Lee
+      }());
+
+      g.next();
+    })();
+  </script>
+</body>
+
+</html>
