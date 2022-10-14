@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>클래스 | class</title>
+</head>
+
+<body>
+  <script type="text/javascript">
+    // 자바스크립트는 프로토타입 기반(prototype-based) 객체지향 언어
+    // 프로토타입 체인과 클로저 등으로 객체지향 언어의 상속, 캡슐화(정보 은닉) 등의 개념을 구현할 수 있습니다.
+
+    (function () {
+      // es5에서 생성자 함수와 프로토타입, 클로저를 사용해서 객체 지향 프로그래밍 구현한 예제
+      var Person = (function () {
+        // Constructor
+        function Person(name) {
+          this._name = name;
+        }
+
+        // public method
+        Person.prototype.sayHi = function () {
+          console.log("Hi! " + this._name);
+        }
+
+        // return constructor
+        return Person;
+      })();
+
+      var me = new Person('Lee');
+      me.sayHi(); // Hi! Lee.
+
+      console.log(me instanceof Person);
+    })();
+
+    console.log("---------------");
+
+    (function () {
+      // 클래스로 구현한 예제
+
+      // 클래스 선언문
+      class Person {
+        // constructor(생성자)
+        constructor(name) {
+          this._name = name;
+        }
+
+        sayHi() {
+          console.log(`Hi! ${this._name}`);
+        }
+      }
+
+      // 인스턴스 생성
+      const me = new Person('Lee');
+      me.sayHi(); // Hi! Lee
+
+      console.log(me instanceof Person);
+    })();
+
+    console.log("---------------");
+
+    (function () {
+      // 클래스를 함수 표현식으로 사용할 수 있지만, 함수 표현식으로 사용하게 되면 선언된 클래스 이름으로 인스턴스를 생성할 수 없게 됩니다.
+      const Foo = class MyClass { };
+
+      const foo = new Foo();
+      console.log(foo);
+
+      try {
+        new MyClass();
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+
+    console.log("---------------");
+
+    (function () {
+      class Foo { }
+      const foo = new Foo();
+
+      // Foo는 생성자 함수(constructor) 입니다.
+      console.log(Object.getPrototypeOf(foo).constructor === Foo);
+    })();
+
+    console.log("---------------");
+
+    (function () {
+      // constructor을 생략해도 constructor(){}같이 빈 constuctor가 생성되게 됩니다.
+      class Foo { }
+      const foo = new Foo();
+      console.log(foo);
+
+      // 프로퍼티 동적 할당 및 초기화
+      foo.num = 1;
+      console.log(foo); // Foo {num: 1}
+
+      // 다만 consturctor는 인스턴스 생성과 동시에 클래스 필드의 생성과 초기화를 실행하기 때문에 클래스 필드의 초기화가 필요하다면 생략해서는 안됩니다.
+    })();
+
+    console.log("---------------");
+
+    (function () {
+      // Private 클래스 필드
+      // 최신 브라우저(Chrome 72이상), 최신 Node.js(버전 12이상)에서 정상 작동
+      class Foo {
+        x = 1; // Field declaration
+        #p = 0; // Private field
+        static y = 20; // Static public field
+        static #sp = 30; // Static private field
+
+        bar() {
+          this.#p = 10;
+
+          return this.#p;
+        }
+
+      }
+
+      const foo = new Foo();
+      console.log(foo);
+      console.log(foo.x);
+      // console.log(foo.#p); // private
+      console.log(foo.bar());
+    })();
+
+    console.log("---------------");
+
+    (function () {
+      // getter
+      // getter는 클래스 필드에 접근할 때마다 클래스 필드의 값을 조작하는 행위가 필요할 때 사용합니다.
+      class Foo {
+        constructor(arr = []) {
+          this._arr = arr;
+        }
+
+        // getter: get 키워드 뒤에 오는 메소드 이름 firstElem은 클래스 필드 이름처럼 사용됩니다.
+        get firstElem() {
+          // getter는 반드시 무언가를 반환해야 합니다.
+          return this._arr.length ? this._arr[0] : null;
+        }
+      }
+
+      const foo = new Foo([1, 2]);
+      // 필드 firstElem에 접근하면 getter가 호출됩니다.
+      console.log(foo.firstElem);
+    })();
+
+    console.log("---------------");
+
+    (function () {
+      // setter
+      // setter는 클래스 필드에 값을 할당할 때마다 클래스 필드의 값을 조작하는 행위가 필요할 때 사용합니다.
+      // setter는 호출하는 것이 아니라 프로퍼티처럼 값을 할당하는 형식으로 사용하고 할당 시에 메소드가 호출됩니다.
+
+      class Foo {
+        constructor(arr = []) {
+          this._arr = arr;
+        }
+
+        get firstElem() {
+          return this._arr.length ? this._arr[0] : null;
+        }
+
+        // setter: set 키워드 뒤에 오는 메소드 이름 firstElem은 클래스 필드 이름처럼 사용됩니다.
+        set firstElem(elem) {
+          console.log('elem: ', elem);
+          this._arr = [elem, ...this._arr];
+        }
+      }
+
+      const foo = new Foo([1, 2]);
+
+      foo.firstElem = 100;
+
+      console.log(foo.firstElem);
+    })();
+
+    console.log("---------------");
+
+    (function () {
+      // 정적 매소드 (static)
+      // 클래스의 정적(static) 메소드를 정의할 때 static 키워드를 사용합니다. 정적 메소드는 클래스의 이름으로 호출합니다. 따라서 클래스의 인스턴스를 생성하지 않아도 호출할 수 있습니다.
+
+      class Foo {
+        constructor(prop) {
+          this.prop = prop;
+        }
+
+        static staticMethod() {
+          // 정적 메소드는 this를 사용할 수 없습니다.
+          // 정적 메소드 내부에서 this는 클래스의 인스턴스가 아닌 클래스 자신을 가리킵니다.
+          return "staticMethod";
+        }
+
+        prototypeMethod() {
+          return this.prop;
+        }
+      }
+      console.log(Foo.staticMethod());
+
+      const foo = new Foo(123);
+      try {
+        // 정적 메소드는 인스턴스로 호출할 수 없습니다.
+        // TypeError: foo.staticMethod is not a function
+        console.log(foo.staticMethod());
+      } catch (error) {
+        console.error(error);
+      }
+
+      // 정적 메소드는 this를 사용할 수 없습니다.
+      // 이 말은 메소든 매부에서 this를 사용할 필요가 없는 메소드는 정적 메소드로 만들 수 있습니다.
+      // 정적 메소드는 Math객체의 메소드처럼 어플리케이션 전역에서 사용할 유틸리티(utility) 함수를 생성할 때 주로 사용합니다.
+    })();
+
+    console.log("---------------");
+
+    (function () {
+      // 클래스 상속
+      // 코드 재사용 관점에서 매우 유용합니다.
+      // 새롭게 정의할 클래스가 기존에 있는 클래스와 매우 유사하다면, 상속을 통해 그대로 사용하고 다른 점만 구현하면 됩니다.
+
+      class Circle {
+        constructor(radius) {
+          this.radius = radius; // 반지름
+        }
+
+        // 원의 지름
+        getDiameter() {
+          return 2 * this.radius;
+        }
+
+        // 원의 둘레
+        getPerimeter() {
+          return 2 * Math.PI * this.radius;
+        }
+
+        // 원의 넓이
+        getArea() {
+          return Math.PI * Math.pow(this.radius, 2);
+        }
+      }
+
+      // 자식 클래스
+      class Cylinder extends Circle {
+        constructor(radius, height) {
+          // super 메소드는 부모 클래스의 constructor를 호출하면서 인수를 전달합니다.
+          super(radius);
+          this.height = height;
+        }
+
+        // 원통의 넓이: 부모 클래스의 getArea 메소드를 오버라이딩 하였습니다.
+        getArea() {
+          // (원통의 높이 * 원의 둘레) + (2 * 원의 넓이)
+          return (this.height * super.getPerimeter()) + (2 * super.getArea());
+        }
+
+        // 원통의 부피
+        getVolume() {
+          return super.getArea() * this.height;
+        }
+      }
+
+      const cylinder = new Cylinder(2, 10);
+
+      // 원의 지름
+      console.log(cylinder.getDiameter());
+      // 원의 둘레
+      console.log(cylinder.getPerimeter());
+      // 원의 넓이
+      console.log(cylinder.getArea());
+      // 원의 부피
+      console.log(cylinder.getVolume());
+
+      // cylinder는 Cylinder 클래스의 인스턴스
+      console.log(cylinder instanceof Cylinder);
+      // cylinder는 Circle 클래스의 인스턴스
+      console.log(cylinder instanceof Circle);
+    })();
+
+
+  </script>
+</body>
+
+</html>
