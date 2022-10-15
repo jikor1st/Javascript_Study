@@ -1,56 +1,95 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 
 <head>
   <meta charset="UTF-8">
-  <title>closures | 클로저</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>closure | 클로저</title>
 </head>
 
 <body>
-  <div>
-    <p id="counter-view">0</p>
-    <div id="counter-btn-container">
-
-      <button class="counter-btn" data-type="+">+</button>
-      <button class="counter-btn" data-type="-">-</button>
+  <div id="box-container">
+    <div class="wrapper" style="width:100px; height:100px;">
+      <div class="box" style="width:100%; height:100%; background:red;"></div>
     </div>
+    <button class="toggle">toggle</button>
+  </div>
+  <hr />
+  <div id="counting-container">
+    <p>클로저를 사용한 카운팅</p>
+    <button class="increase">+</button>
+    <p class="count">0</p>
   </div>
   <script type="text/javascript">
-    const counter = (function () {
-      let privateCounter = 0;
+    // 클로저
+    // reference : https://poiemaweb.com/js-closure
 
-      function changeBy(val) {
-        privateCounter += val;
-      }
+    /*
+    * 클로저란?
 
-      return {
-        increment() {
-          changeBy(1);
-        },
-        decrement() {
-          changeBy(-1);
-        },
-        value() {
-          return privateCounter;
-        },
-      };
+    - 클로저는 함수와 그 함수가 선언됐을 때의 렉시컬 환경과의 조합이다.
+    - "그 함수가 선언될 때의 렉시컬 환경"이란 내부 함수가 선언됐을 때의 스코프를 의미한다.
+    - 자신을 포함하고 있는 외부함수보다 내부함수가 더 오래 유지되는 경유, 외부 함수 밖에서 내부 함수가 호출되더라도 외부함수의 지역 변수에 접근할 수 있는데 이러한 함수를 클로저라고 부른다.
+    - 자신이 생성될 때의 환경을 기억하는 함수
+
+    */
+
+    (function () {
+      const box = document.querySelector('#box-container .box');
+      const toggleBtn = document.querySelector('#box-container .toggle');
+
+      const toggle = (function () {
+        let isShow = false;
+        // 이 로그는 최초 1회만 실행됩니다.
+        console.log('isShow: ', isShow);
+
+        // 클로저를 반환
+        return function () {
+          box.style.display = isShow ? 'block' : 'none';
+          // 상태 변경
+          isShow = !isShow;
+        }
+      })();
+
+      // 이벤트에 클로저 할당
+      toggleBtn.onclick = toggle;
+
+
+      /**
+       * 1. 즉시실행함수는 함수를 반환하고 즉시 소멸합니다. 즉시실행함수가 반환한 함수는 자신이 생성됐을 때의 렉시컬 환경에 속한 변수 isShow를 기억하는 클로저입니다. 클로저가 기억하는 변수 isShow는 box요소의 표시상태를 나타냅니다.
+       * 
+       * 2. 클로저를 이벤트 핸들러로서 이벤트 프로퍼티에 할당했습니다. 이벤트 프로퍼티에서 이벤트 핸들러인 클로저를 제거하지 않는 한 클로저가 기억하는 렉시컬 환경의 변수 isShow는 소멸하지 않습니다. 다시 말해 현재 상태를 기억합니다.
+       * 
+       * 3. 버튼을 클릭하면 이벤트 프로퍼티에 할당한 이벤트 핸들러인 클로저가 호출됩니다. 이때 box요소의 표시 상태를 나타내는 변수 isShow 값이 변경됩니다. 변수 isShow는 클로저에 의해 참조되고 있기 때문에 유요하며 자신의 변경된 최신 상태를 계속해서 유지합니다.
+       * 
+      */
     })();
 
-    const counterBtnContainer = document.querySelector("#counter-btn-container");
-    const counterView = document.querySelector("#counter-view");
+    (function () {
+      const increaseBtn = document.querySelector("#counting-container .increase");
+      const count = document.querySelector('#counting-container .count');
 
-    counterBtnContainer.addEventListener("click", (event) => {
-      const target = event.target;
-      const targetType = target.dataset.type;
+      const increase = (function () {
+        // 카운트 상태를 유지하기 위한 자유 변수
+        let counter = 0;
 
-      if (targetType === "+") {
-        counter.increment();
-      } else if (targetType === "-") {
-        counter.decrement();
+        // 클로저를 반환
+        return function () {
+          return ++counter;
+        }
+      })();
+
+      increaseBtn.onclick = function () {
+        count.innerHTML = increase();
       }
 
-      counterView.innerHTML = counter.value();
-    });
+      /**
+       * 즉시실행함수는 한번만 실행되므로 increase가 호출될 때마다 변수 counter가 재차 ㅗ기화될 일은 없습니다. 변수 counter는 외부에서 직접 접근할 수 없는 private 변수이므로 전역 변수를 사용했을 때와 같이 의도되지 않은 변경을 걱정할 필요도 없기 때문에 보다 안정적인 프로그래밍이 가능합니다.
+       * 
+       * 변수의 값은 누군가에 의해 언제든지 변경될 수 있어 오류 발생의 근본적 원인이 될 수 잇습니다. 상태 변경이나 가변(mutable) 데이터를 피하고 불변성(Immutablity)을 지향하는 함수형 프로그래밍에서 부수 효과(Side effect)를 최대한 억제하여 오류를 피하고 프로그램의 안정성을 높이기 위해 클로저는 적극적으로 사용됩니다.
+      */
+    })();
   </script>
 </body>
 

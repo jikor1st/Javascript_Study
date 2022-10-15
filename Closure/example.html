@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>클로저 예제</title>
+</head>
+
+<body>
+  <div>
+    <p id="counter-view">0</p>
+    <div id="counter-btn-container">
+
+      <button class="counter-btn" data-type="+">+</button>
+      <button class="counter-btn" data-type="-">-</button>
+    </div>
+  </div>
+  <script type="text/javascript">
+    const counter = (function () {
+      let privateCounter = 0;
+
+      function changeBy(val) {
+        privateCounter += val;
+      }
+
+      return {
+        increment() {
+          changeBy(1);
+        },
+        decrement() {
+          changeBy(-1);
+        },
+        value() {
+          return privateCounter;
+        },
+      };
+    })();
+
+    const counterBtnContainer = document.querySelector("#counter-btn-container");
+    const counterView = document.querySelector("#counter-view");
+
+    counterBtnContainer.addEventListener("click", (event) => {
+      const target = event.target;
+      const targetType = target.dataset.type;
+
+      if (targetType === "+") {
+        counter.increment();
+      } else if (targetType === "-") {
+        counter.decrement();
+      }
+
+      counterView.innerHTML = counter.value();
+    });
+  </script>
+</body>
+
+</html>
