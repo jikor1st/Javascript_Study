@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <title>자바스크립트 동작원리 중 queue</title>
+</head>
+
+<body>
+  <div>
+    <div id="container">
+
+    </div>
+  </div>
+  <script type="text/javascript">
+    (function () {
+      console.log(1 + 1);
+      // setTimeout과 같은 비동기 함수는
+      // queue에 들어가고 stack이 비어졌을때 차례로 stack으로 옮겨져 실행이 됩니다. 따라서 다음 setTimeout의 콜백은 0초여도 맨 마지막에 실행이 됩니다.
+      setTimeout(() => {
+        console.log(2 + 2);
+      }, 0)
+      console.log(3 + 3);
+    })();
+  </script>
+</body>
+
+</html>

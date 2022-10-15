@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>이것 | this</title>
+</head>
+
+<body>
+  <script type="text/javascript">
+    (function () {
+      "use strict";
+      const person = {
+        name: 'Kim',
+        age: 20,
+        getName() {
+          return this.name;
+        }
+      }
+      console.log(person.getName())
+    })();
+
+    (function () {
+      "use strict";
+
+      const person = {
+        name: "Kim",
+      }
+
+      const foo = function () {
+        console.log("this:", this);
+
+        return this;
+      }
+
+      const bar = foo.call(person);
+      console.log('bar: ', bar.name);
+    })();
+  </script>
+</body>
+
+</html>
