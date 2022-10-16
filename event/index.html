@@ -60,7 +60,7 @@
       element.addEventListener("click", (e) => {
         console.log(e.currentTarget.className)
       })
-    })
+    });
 
     // capture
     const captureEl = document.querySelectorAll('.capture');
@@ -68,16 +68,16 @@
       element.addEventListener("click", (e) => {
         console.log(e.currentTarget.className)
       }, { capture: true })
-    })
+    });
 
     // stopPropagation
     const stopPropagationEl = document.querySelectorAll('.stop-propagation');
-    // stopPropagationEl.forEach((element) => {
-    //   element.addEventListener("click", (e) => {
-    //     e.stopPropagation();
-    //     console.log(e.currentTarget.className)
-    //   })
-    // })
+    stopPropagationEl.forEach((element) => {
+      element.addEventListener("click", (e) => {
+        e.stopPropagation();
+        console.log(e.currentTarget.className)
+      })
+    });
 
     // delegation
     (function () {
