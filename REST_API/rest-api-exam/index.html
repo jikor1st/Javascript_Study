@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div>
+    <p id="content">loading</p>
+    <button id="POST-btn">POST Button</button>
+    <button id="PUT-btn">PUT Button</button>
+    <button id="PATCH-btn">PATCH Button</button>
+    <button id="DELETE-btn">DELETE Button</button>
+  </div>
+  <script type="text/javascript">
+    const content = document.querySelector('#content');
+    // GET
+    (function () {
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', 'http://localhost:5000/todos');
+      xhr.send();
+
+      xhr.onreadystatechange = function (e) {
+        // if (xhr.readState !== XMLHttpRequest.DONE) return;
+
+        content.innerHTML = 'loading';
+        if (xhr.status === 200) { // 200: OK => https://httpstatuses.com
+          console.log("test", xhr.responseText);
+          content.innerHTML = xhr.responseText;
+        } else {
+          console.log("Error!");
+          content.innerHTML = 'error';
+        }
+      }
+    })();
+
+    // GET use id
+    (function () {
+      // todos 리소스에서 id를 사용하여 특정 todo를 조회(retrieve)합니다.
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', 'http://localhost:5000/todos/4');
+      xhr.send();
+
+      xhr.onreadystatechange = function (e) {
+        if (xhr.readState !== XMLHttpRequest.DONE) return;
+
+        if (xhr.status === 200) { // 200: OK => https://httpstatuses.com
+          console.log(xhr.responseText);
+        } else {
+          console.log("Error!");
+        }
+      }
+    })();
+
+    // POST with id
+    (function () {
+      const postBtn = document.querySelector('#POST-btn');
+      postBtn.onclick = function () {
+        // todos 리소스에서 id를 사용하여 특정 todo를 조회(retrieve)합니다.
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'http://localhost:5000/todos');
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send(JSON.stringify({ id: 4, content: 'Angular', completed: true }));
+
+        xhr.onreadystatechange = function (e) {
+          if (xhr.readyState !== XMLHttpRequest.DONE) return;
+
+          if (xhr.status === 201) { // 201: Created
+            console.log(xhr.responseText);
+          } else {
+            console.log("Error!");
+          }
+        };
+      }
+    })();
+
+    // PUT
+    (function () {
+      // PUT은 특정 리소스의 전체를 갱신할 때 사용합니다. todos 리소스에서 id를 사용하여 todo를 특정하여 id를 제외한 리소스 전체를 갱신합니다.
+
+      const putBtn = document.querySelector('#PUT-btn');
+      putBtn.onclick = function () {
+        const xhr = new XMLHttpRequest();
+        xhr.open('PUT', 'http://localhost:5000/todos/4');
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send(JSON.stringify({ id: 4, content: 'React', completed: false }));
+
+        xhr.onreadystatechange = function (e) {
+          if (xhr.readyState !== XMLHttpRequest.DONE) return;
+
+          if (xhr.status === 200) {
+            console.log(xhr.responseText);
+          } else {
+            console.log("Error!");
+          }
+        };
+      };
+    })();
+
+    // PATCH
+    (function () {
+      // PATCH은 특정 리소스의 일부를 갱신할 때 사용합니다. todos 리소스의 id를 사용하여 todo를 특정하여 completed만을 true로 갱신합니다.
+
+      const patchBtn = document.querySelector('#PATCH-btn');
+      patchBtn.onclick = function () {
+        const xhr = new XMLHttpRequest();
+        xhr.open('PATCH', 'http://localhost:5000/todos/4');
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send(JSON.stringify({ completed: true }));
+
+        xhr.onreadystatechange = function (e) {
+          if (xhr.readyState !== XMLHttpRequest.DONE) return;
+
+          if (xhr.status === 200) {
+            console.log(xhr.responseText);
+          } else {
+            console.log("Error!");
+          }
+        };
+      };
+    })();
+
+    // DELETE
+    (function () {
+      // todos 리소스에서 id를 사용하여 todo를 특정하고 삭제합니다.
+
+      const deleteBtn = document.querySelector('#DELETE-btn');
+      deleteBtn.onclick = function () {
+        const xhr = new XMLHttpRequest();
+        xhr.open('DELETE', 'http://localhost:5000/todos/4');
+        xhr.send();
+
+        xhr.onreadystatechange = function (e) {
+          if (xhr.readyState !== XMLHttpRequest.DONE) return;
+
+          if (xhr.status === 200) {
+            console.log(xhr.responseText);
+          } else {
+            console.log("Error!");
+          }
+        };
+      };
+    })();
+  </script>
+</body>
+
+</html>
