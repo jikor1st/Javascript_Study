@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>json parse</title>
+</head>
+
+<body>
+  <script type="text/javascript">
+    (function () {
+      const o = { name: 'Lee', gender: 'male', age: 20 };
+
+      // 객체 => JSON 형식 문자열
+      const strObj = JSON.stringify(o);
+      console.log(typeof strObj, strObj);
+      // string {"name":"Lee","gender":"male","age":20}
+
+      const arr = [1, 5, 'false'];
+
+      // 배열 객체 => 문자열
+      const strArray = JSON.stringify(arr);
+      console.log(typeof strArray, strArray); // string [1,5,"false"]
+
+      console.log('--------------------------');
+      // parse
+
+      // JSON 형식의 문자열 => 객체
+      const obj = JSON.parse(strObj);
+      console.log(typeof obj, obj); // object {name: 'Lee', gender: 'male', age: 20}
+
+      // 문자열 => 배열 객체
+      const objArray = JSON.parse(strArray);
+      console.log(typeof objArray, objArray); // object (3) [1, 5, 'false']
+    })();
+
+    console.log('--------------------------');
+
+    (function () {
+      // 배열이 JSON 형식의 문자열로 변환되어 있는 경우 JSON.parse는 문자열을 배열 객체로 변환합니다. 배열의 요소가 객체인 경우 배열의 요소까지 객체로 변환합니다.
+
+      const todos = [
+        { id: 1, content: 'HTML', completed: true },
+        { id: 2, content: 'CSS', completed: true },
+        { id: 3, content: 'JavaScript', completed: false }
+      ];
+
+      // 배열 => JSON 형식의 문자열
+      const str = JSON.stringify(todos);
+      console.log(typeof str, str);
+
+      // JSON 형식의 문자열 => 배열
+      const parsed = JSON.parse(str);
+      console.log(typeof parsed, parsed);
+    })();
+  </script>
+</body>
+
+</html>

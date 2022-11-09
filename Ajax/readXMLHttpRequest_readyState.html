@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script type="text/javascript">
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "readXMLHttpRequest.json");
+
+    xhr.send(); // HEADERS_RECEIVED
+
+    xhr.onreadystatechange = function (e) {
+      if (xhr.readyState === XMLHttpRequest.UNSENT) console.log("UNSENT")
+      if (xhr.readyState === XMLHttpRequest.OPENED) console.log("OPENED")
+      if (xhr.readyState === XMLHttpRequest.HEADERS_RECEIVED) console.log("HEADERS_RECEIVED")
+      if (xhr.readyState === XMLHttpRequest.LOADING) console.log("LOADING")
+      if (xhr.readyState === XMLHttpRequest.DONE) console.log("DONE")
+    }
+
+    xhr.onload = function (e) {
+      // status는 response 상태 코드 반환 : 200 => 정상 응답
+      console.log("onload", xhr.status);
+      if (xhr.status === 200) {
+        console.log(xhr.responseText);
+      } else {
+        console.log('Error!');
+      }
+    }
+  </script>
+</body>
+
+</html>

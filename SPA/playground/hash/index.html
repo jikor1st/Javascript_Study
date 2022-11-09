@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <a href="#">home</a>
+      <a href="#service">service</a>
+      <a href="#about">about</a>
+    </nav>
+    <div id="root"></div>
+  </header>
+  <script type="text/javascript">
+    const $root = document.getElementById('root');
+    const render = (e) => {
+      try {
+        const hash = window.location.hash.replace('#', '');
+        console.log('hash: ', hash);
+        $root.innerHTML = hash
+      } catch (err) {
+
+      }
+    }
+    window.addEventListener('hashchange', render);
+    window.addEventListener('DOMContentLoaded', render);
+  </script>
+</body>
+
+</html>

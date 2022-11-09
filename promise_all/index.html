@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="container"></div>
+  <script type="text/javascript">
+
+    (function () {
+      const containerEl = document.querySelector('#container');
+
+      const BASE_URL = 'https://jsonplaceholder.typicode.com';
+
+      function getPost(page) {
+        const random = Math.floor(Math.random() * (3 - 1) + 1);
+        if (random === 1) return Promise.reject('error')
+        return fetch(`${BASE_URL}/posts/${page}`).then(data => data.json())
+      }
+
+
+      const fetchDataAwait = async () => {
+        console.time('소요시간 await:');
+        const post1 = await getPost(1);
+        const post2 = await getPost(2);
+
+        console.log(post1, post2);
+        console.timeEnd('소요시간 await:')
+      }
+
+      // fetchDataAwait();
+
+      const fetchDataPromiseAll = async () => {
+        console.time('소요시간 promise all:');
+
+        const posts = await Promise.all([getPost(1), getPost(0), getPost(2)]);
+
+        console.log(posts);
+        console.timeEnd('소요시간 promise all:')
+      }
+
+      // fetchDataPromiseAll();
+
+
+      const fetchDataPromiseAllSettled = async () => {
+        console.time('소요시간 promise settled:');
+
+        const posts = await Promise.allSettled([getPost(1), getPost(0), getPost(2)]);
+
+        console.log(posts);
+        console.timeEnd('소요시간 promise settled:')
+      }
+
+      fetchDataPromiseAllSettled();
+    })()
+  </script>
+</body>
+
+</html>
